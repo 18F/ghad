@@ -11,3 +11,5 @@
     ```sh
     ORG=... GITHUB_TOKEN=... ruby archive.rb
     ```
+
+_Creative Commons Zero - public domain_

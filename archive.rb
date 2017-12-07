@@ -7,7 +7,7 @@ client = Octokit::Client.new(access_token: TOKEN)
 client.auto_paginate = true
 
 ORG = ENV.fetch('ORG')
-CUTOFF = ENV.fetch('CUTOFF', '90').to_i.days.ago
+CUTOFF = ENV.fetch('CUTOFF_DAYS', '90').to_i.days.ago
 
 repos = client.organization_repositories(ORG)
 repos.each do |repo|
