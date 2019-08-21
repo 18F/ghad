@@ -90,9 +90,9 @@ const archiveIfStale = async repo => {
   if (archive) {
     if (process.env.FOR_REAL) {
       await archiveRepo(repo);
-      console.log(`${repo.name} archived.`);
+      console.log(`Archived ${repo.html_url}`);
     } else {
-      console.log(`${repo.name} would have been archived.`);
+      console.log(`Would archive ${repo.html_url}`);
     }
   }
 };
