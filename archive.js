@@ -28,12 +28,17 @@ const getRepos = () => {
 const parseGitHubTimestamp = str => moment(str, moment.ISO_8601);
 
 const getLatestEvent = async repo => {
-  const events = await octokit.activity.listRepoEvents({
+  const eventResponse = await octokit.activity.listRepoEvents({
     owner: repo.owner.login,
-    repo: repo.name,
-    per_page: 1
+    repo: repo.name
   });
-  return events.data[0];
+  // filter out certain events
+  // https://developer.github.com/v3/activity/events/types/
+  const IGNORED_EVENTS = ["ForkEvent", "StarEvent", "WatchEvent"];
+  const events = eventResponse.data.filter(
+    event => !IGNORED_EVENTS.includes(event.type)
+  );
+  return events[0];
 };
 
 const attrAfter = (dateStr, cutoff) => {
@@ -51,8 +56,6 @@ const updatedSince = async (repo, cutoff) => {
   }
 
   const latestEvent = await getLatestEvent(repo);
-  // TODO filter for certain events
-  // https://developer.github.com/v3/activity/events/types/
   if (latestEvent) {
     if (attrAfter(latestEvent.created_at, cutoff)) {
       return true;
