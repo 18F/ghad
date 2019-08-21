@@ -36,6 +36,32 @@ const getLatestEvent = async repo => {
   return events.data[0];
 };
 
+const attrAfter = (dateStr, cutoff) => {
+  const date = parseGitHubTimestamp(dateStr);
+  return date.isAfter(cutoff);
+};
+
+const updatedSince = async (repo, cutoff) => {
+  if (attrAfter(repo.updated_at, cutoff)) {
+    return true;
+  }
+
+  if (attrAfter(repo.pushed_at, cutoff)) {
+    return true;
+  }
+
+  const latestEvent = await getLatestEvent(repo);
+  // TODO filter for certain events
+  // https://developer.github.com/v3/activity/events/types/
+  if (latestEvent) {
+    if (attrAfter(latestEvent.created_at, cutoff)) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 const shouldBeArchived = async repo => {
   // always archive "DEPRECATED" repositories
   const description = repo.description || "";
@@ -44,22 +70,8 @@ const shouldBeArchived = async repo => {
   }
 
   // if anything has happened with the repository since the CUTOFF, skip it
-
-  const updatedAt = parseGitHubTimestamp(repo.updated_at);
-  const pushedAt = parseGitHubTimestamp(repo.pushed_at);
-  if (updatedAt.isAfter(CUTOFF) || pushedAt.isAfter(CUTOFF)) {
-    return false;
-  }
-
-  const latestEvent = await getLatestEvent(repo);
-  if (latestEvent) {
-    const createdAt = parseGitHubTimestamp(latestEvent.created_at);
-    if (createdAt.isAfter(CUTOFF)) {
-      return false;
-    }
-  }
-
-  return true;
+  const recentlyUpdated = await updatedSince(repo, CUTOFF);
+  return !recentlyUpdated;
 };
 
 const archiveRepo = repo => {
