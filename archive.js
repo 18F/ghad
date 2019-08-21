@@ -88,8 +88,12 @@ const archiveRepo = repo => {
 const archiveIfStale = async repo => {
   const archive = await shouldBeArchived(repo);
   if (archive) {
-    await archiveRepo(repo);
-    console.log(`${repo.name} archived.`);
+    if (process.env.FOR_REAL) {
+      await archiveRepo(repo);
+      console.log(`${repo.name} archived.`);
+    } else {
+      console.log(`${repo.name} would have been archived.`);
+    }
   }
 };
 
