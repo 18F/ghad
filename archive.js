@@ -82,23 +82,22 @@ const archiveRepo = repo => {
   });
 };
 
-(async () => {
+const archiveIfStale = async repo => {
+  const archive = await shouldBeArchived(repo);
+  if (archive) {
+    await archiveRepo(repo);
+    console.log(`${repo.name} archived.`);
+  }
+};
+
+const archiveStaleRepos = async () => {
   const repoSearch = getRepos();
   for await (const response of repoSearch) {
     for (const repo of response.data) {
-      const archive = await shouldBeArchived(repo);
-      if (archive) {
-        // don't wait for this to happen
-        archiveRepo(repo).then(
-          () => {
-            console.log(`${repo.name} archived.`);
-          },
-          err => {
-            console.error(`Failed to archive ${repo.name}:`);
-            console.error(err);
-          }
-        );
-      }
+      // don't wait for this to happen
+      archiveIfStale(repo);
     }
   }
-})();
+};
+
+archiveStaleRepos();
