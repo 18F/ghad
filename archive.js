@@ -76,8 +76,16 @@ const archiveRepo = repo => {
     for (const repo of response.data) {
       const archive = await shouldBeArchived(repo);
       if (archive) {
-        console.log(`Archiving ${repo.name}`);
-        archiveRepo(repo);
+        // don't wait for this to happen
+        archiveRepo(repo).then(
+          () => {
+            console.log(`${repo.name} archived.`);
+          },
+          err => {
+            console.error(`Failed to archive ${repo.name}:`);
+            console.error(err);
+          }
+        );
       }
     }
   }
