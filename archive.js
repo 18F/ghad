@@ -33,7 +33,7 @@ const getLatestEvent = async repo => {
     repo: repo.name,
     per_page: 1
   });
-  return events[0];
+  return events.data[0];
 };
 
 const shouldBeArchived = async repo => {
