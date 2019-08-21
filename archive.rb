@@ -9,12 +9,8 @@ client.auto_paginate = true
 ORG = ENV.fetch('ORG')
 CUTOFF = ENV.fetch('CUTOFF_DAYS', '90').to_i.days.ago
 
-repos = client.organization_repositories(ORG)
-repos.each do |repo|
-  if repo.archived
-    next
-  end
-
+repos = client.search_repositories("user:#{ORG} archived:false")
+repos.items.each do |repo|
   # always archive "DEPRECATED" repositories
   description = repo.description || ""
   unless description.match?(/DEPRECATED/i)
