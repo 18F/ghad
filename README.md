@@ -7,7 +7,7 @@
    npm install
    ```
 
-1. Run the script as a dry run.
+1. Run the script as a dry run. Note that the `ORG` can actually be a user.
 
    ```sh
    ORG=... GITHUB_TOKEN=... node archive.js
