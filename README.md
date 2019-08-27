@@ -1,3 +1,5 @@
+# GitHub administration command line tool
+
 1. Install Node.js 10+.
 1. [Create a token.](https://github.com/settings/tokens/new?description=archive%20script&scopes=repo)
 1. Clone this Gist.
@@ -18,5 +20,3 @@
    ```sh
    ORG=... GITHUB_TOKEN=... FOR_REAL=1 node archive.js
    ```
-
-_Creative Commons Zero - public domain_
