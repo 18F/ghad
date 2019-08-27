@@ -19,7 +19,7 @@ const CUTOFF = moment().subtract(CUTOFF_DAYS, "days");
 
 const getRepos = () => {
   const options = octokit.search.repos.endpoint.merge({
-    q: `user:${ORG} archived:false`
+    q: `user:${ORG} archived:false fork:true`
   });
   return octokit.paginate.iterator(options);
 };
