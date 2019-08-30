@@ -18,7 +18,7 @@ jobs:
 
       - run:
           name: Archive repositories (dry run)
-          command: node index.js
+          command: node index.js archive
 
   apply:
     docker:
@@ -38,7 +38,7 @@ jobs:
 
       - run:
           name: Archive repositories
-          command: node index.js --apply
+          command: node index.js archive --apply
 
 workflows:
   version: 2
