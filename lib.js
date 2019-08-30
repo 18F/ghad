@@ -69,10 +69,10 @@ const archiveRepo = repo => {
   });
 };
 
-const archiveIfStale = async (repo, cutoff) => {
+const archiveIfStale = async (repo, cutoff, apply) => {
   const archive = await shouldBeArchived(repo, cutoff);
   if (archive) {
-    if (process.env.FOR_REAL) {
+    if (apply) {
       await archiveRepo(repo);
       console.log(`Archived ${repo.html_url}`);
     } else {
@@ -81,12 +81,12 @@ const archiveIfStale = async (repo, cutoff) => {
   }
 };
 
-const archiveStaleRepos = async (org, cutoff) => {
+const archiveStaleRepos = async (org, cutoff, apply) => {
   const repoResponse = getOrgRepos(org);
   for await (const response of repoResponse) {
     for (const repo of response.data) {
       // don't wait for this to happen
-      archiveIfStale(repo, cutoff);
+      archiveIfStale(repo, cutoff, apply);
     }
   }
 };
@@ -96,7 +96,7 @@ const getUserRepos = () => {
   return octokit.paginate.iterator(options);
 };
 
-const archiveAllStaleRepos = async cutoff => {
+const archiveAllStaleRepos = async (cutoff, apply) => {
   const repoResponse = getUserRepos();
   for await (const response of repoResponse) {
     for (const repo of response.data) {
@@ -104,7 +104,7 @@ const archiveAllStaleRepos = async cutoff => {
         continue;
       }
       // don't wait for this to happen
-      archiveIfStale(repo, cutoff);
+      archiveIfStale(repo, cutoff, apply);
     }
   }
 };

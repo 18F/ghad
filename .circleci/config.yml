@@ -38,9 +38,7 @@ jobs:
 
       - run:
           name: Archive repositories
-          command: node index.js
-          environment:
-            FOR_REAL: true
+          command: node index.js --apply
 
 workflows:
   version: 2

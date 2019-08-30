@@ -9,6 +9,11 @@ require("yargs")
     "Archives inactive repositories.",
     yargs => {
       yargs.options({
+        apply: {
+          type: "boolean",
+          describe:
+            "Archive the repositories; without this, will only be a dry run"
+        },
         cutoff: {
           type: "number",
           default: 90,
@@ -23,10 +28,16 @@ require("yargs")
     argv => {
       const cutoff = moment().subtract(argv.cutoff, "days");
 
+      if (!argv.apply) {
+        process.stdout.write("DRY RUN: ");
+      }
+
       if (argv.org) {
-        lib.archiveStaleRepos(argv.org, cutoff);
+        console.log(`Archiving all stale repositories for ${argv.org}.`);
+        lib.archiveStaleRepos(argv.org, cutoff, argv.apply);
       } else {
-        lib.archiveAllStaleRepos(cutoff);
+        console.log("Archiving all stale repositories.");
+        lib.archiveAllStaleRepos(cutoff, argv.apply);
       }
     }
   )
