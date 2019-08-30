@@ -11,20 +11,26 @@
    npm install
    ```
 
-1. Run the script as a dry run. Note that the `ORG` can actually be a user.
+1. Set your GitHub token.
 
    ```sh
-   ORG=... GITHUB_TOKEN=... node archive.js
+   export GITHUB_TOKEN=...
+   ```
+
+1. Run the script as a dry run.
+
+   ```sh
+   node index.js --org <something>
    ```
 
 1. To actually archive repositories:
 
    ```sh
-   ORG=... GITHUB_TOKEN=... FOR_REAL=1 node archive.js
+   node index.js --org <something> --apply
    ```
 
-The `archive-all.js` script can be used to archive all old repositories your user has write access to across organizations.
+The `--org` is optional. See `node index.js --help` for more info.
 
 ## Warning
 
-***Keep write access to this repository restricted.*** The associated GitHub token is that of an Owner ([**@18f-bot**](https://github.com/18f-bot)), so being able to run arbitrary commands in CI allows privilege escalation.
+**_Keep write access to this repository restricted._** The associated GitHub token is that of an Owner ([**@18f-bot**](https://github.com/18f-bot)), so being able to run arbitrary commands in CI allows privilege escalation.
