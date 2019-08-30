@@ -23,6 +23,8 @@
    ORG=... GITHUB_TOKEN=... FOR_REAL=1 node archive.js
    ```
 
+The `archive-all.js` script can be used to archive old repositories from all organizations your user has access to.
+
 ## Warning
 
 ***Keep write access to this repository restricted.*** The associated GitHub token is that of an Owner ([**@18f-bot**](https://github.com/18f-bot)), so being able to run arbitrary commands in CI allows privilege escalation.

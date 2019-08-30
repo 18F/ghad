@@ -81,7 +81,7 @@ const archiveIfStale = async (repo, cutoff) => {
   }
 };
 
-module.exports.archiveStaleRepos = async (org, cutoff) => {
+const archiveStaleRepos = async (org, cutoff) => {
   const repoSearch = getRepos(org);
   for await (const response of repoSearch) {
     for (const repo of response.data) {
@@ -89,4 +89,23 @@ module.exports.archiveStaleRepos = async (org, cutoff) => {
       archiveIfStale(repo, cutoff);
     }
   }
+};
+
+const getOrgs = () => {
+  const options = octokit.orgs.listForAuthenticatedUser.endpoint.DEFAULTS;
+  return octokit.paginate.iterator(options);
+};
+
+const archiveAllStaleRepos = async cutoff => {
+  const orgResponses = getOrgs();
+  for await (const response of orgResponses) {
+    for (const org of response.data) {
+      archiveStaleRepos(org.login, cutoff);
+    }
+  }
+};
+
+module.exports = {
+  archiveStaleRepos,
+  archiveAllStaleRepos
 };
