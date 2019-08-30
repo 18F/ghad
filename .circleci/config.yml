@@ -1,0 +1,29 @@
+# version: 2.1
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10.16.3
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+            - v1-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
+
+      - run:
+          command: node archive.js
+          environment:
+            ORG: 18F
+
+workflows:
+  version: 2
+  execute:
+    jobs:
+      - build

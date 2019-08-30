@@ -1,4 +1,6 @@
-# GitHub administration command line tool
+# ghad: The GitHub Administration Tool
+
+[![CircleCI](https://circleci.com/gh/18F/ghad.svg?style=svg)](https://circleci.com/gh/18F/ghad)
 
 1. Install Node.js 10+.
 1. [Create a token.](https://github.com/settings/tokens/new?description=archive%20script&scopes=repo)
