@@ -1,7 +1,7 @@
 const moment = require("moment");
 const octokit = require("./client");
 
-const getOrgRepos = (org) => {
+const getOrgRepos = org => {
   const options = octokit.search.repos.endpoint.merge({
     q: `user:${org} archived:false fork:true`
   });

@@ -18,7 +18,7 @@ jobs:
 
       - run:
           name: Archive repositories (dry run)
-          command: node archive-all.js
+          command: node index.js
 
   apply:
     docker:
@@ -38,7 +38,7 @@ jobs:
 
       - run:
           name: Archive repositories
-          command: node archive-all.js
+          command: node index.js
           environment:
             FOR_REAL: true
 

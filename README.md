@@ -11,19 +11,19 @@
    npm install
    ```
 
-1. Run the script as a dry run. Note that the `ORG` can actually be a user.
+1. Run the script as a dry run.
 
    ```sh
-   ORG=... GITHUB_TOKEN=... node archive.js
+   GITHUB_TOKEN=... node index.js --org <something>
    ```
 
 1. To actually archive repositories:
 
    ```sh
-   ORG=... GITHUB_TOKEN=... FOR_REAL=1 node archive.js
+   GITHUB_TOKEN=... FOR_REAL=1 node index.js --org <something>
    ```
 
-The `archive-all.js` script can be used to archive all old repositories your user has write access to across organizations.
+The `--org` is optional. See `node index.js --help` for more info.
 
 ## Warning
 
