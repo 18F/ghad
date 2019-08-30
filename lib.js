@@ -78,17 +78,9 @@ const archiveIfStale = async (repo, cutoff, apply) => {
     } else {
       console.log(`Would archive ${repo.html_url}`);
     }
+    return true;
   }
-};
-
-const archiveStaleRepos = async (org, cutoff, apply) => {
-  const repoResponse = getOrgRepos(org);
-  for await (const response of repoResponse) {
-    for (const repo of response.data) {
-      // don't wait for this to happen
-      archiveIfStale(repo, cutoff, apply);
-    }
-  }
+  return false;
 };
 
 const getUserRepos = () => {
@@ -96,20 +88,55 @@ const getUserRepos = () => {
   return octokit.paginate.iterator(options);
 };
 
-const archiveAllStaleRepos = async (cutoff, apply) => {
-  const repoResponse = getUserRepos();
-  for await (const response of repoResponse) {
+async function* reposFromResponses(responses) {
+  for await (const response of responses) {
     for (const repo of response.data) {
       if (repo.archived) {
         continue;
       }
-      // don't wait for this to happen
-      archiveIfStale(repo, cutoff, apply);
+
+      yield repo;
     }
   }
+}
+
+const processRepoResponses = async (responses, cutoff, apply) => {
+  const repos = reposFromResponses(responses);
+  let promises = [];
+
+  for await (const repo of repos) {
+    // don't wait for this to happen
+    const promise = archiveIfStale(repo, cutoff, apply);
+    promises.push(promise);
+  }
+
+  // wait until all archiving has completed
+  const results = await Promise.all(promises);
+  // https://stackoverflow.com/a/42317235/358804
+  const numReposArchived = results.filter(Boolean).length
+
+  console.log(`${numReposArchived} repositories ${apply ? '' : 'would be '}archived.`);
+};
+
+const archiveStaleRepos = async (cutoff, opts) => {
+  if (!opts.apply) {
+    process.stdout.write("DRY RUN: ");
+  }
+
+  let responses;
+  if (opts.org) {
+    console.log(`Archiving all stale repositories for ${opts.org}...`);
+    responses = getOrgRepos(opts.org);
+  } else {
+    console.log("Archiving all stale repositories...");
+    responses = getUserRepos();
+  }
+
+  await processRepoResponses(responses, cutoff, opts.apply);
+
+  console.log("Done.");
 };
 
 module.exports = {
-  archiveStaleRepos,
-  archiveAllStaleRepos
+  archiveStaleRepos
 };
