@@ -26,8 +26,9 @@ jobs:
 
 workflows:
   version: 2
-  execute:
+  pushes:
     jobs:
+      # "plan" vs. apply
       - build:
           filters:
             branches:
@@ -38,4 +39,15 @@ workflows:
             branches:
               only:
                 - master
+          apply: true
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build:
           apply: true
