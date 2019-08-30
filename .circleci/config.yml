@@ -1,6 +1,10 @@
 version: 2.1
 jobs:
-  plan:
+  build:
+    parameters:
+      apply:
+        type: boolean
+        default: false
     docker:
       - image: circleci/node:10.16.3
     steps:
@@ -17,40 +21,33 @@ jobs:
           key: v1-dependencies-{{ checksum "package-lock.json" }}
 
       - run:
-          name: Archive repositories (dry run)
-          command: node index.js archive
-
-  apply:
-    docker:
-      - image: circleci/node:10.16.3
-    steps:
-      - checkout
-
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package-lock.json" }}
-            - v1-dependencies-
-      - run: npm install
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package-lock.json" }}
-
-      - run:
-          name: Archive repositories
-          command: node index.js archive --apply
+          name: "Archive repositories (apply: << parameters.apply >>)"
+          command: node index.js archive <<# parameters.apply >>--apply<</ parameters.apply >>
 
 workflows:
   version: 2
-  execute:
+  pushes:
     jobs:
-      - plan:
+      # "plan" vs. apply
+      - build:
           filters:
             branches:
               ignore:
                 - master
-      - apply:
+      - build:
           filters:
             branches:
               only:
                 - master
+          apply: true
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build:
+          apply: true
