@@ -112,10 +112,16 @@ const processRepoResponses = async (responses, cutoff, apply) => {
 
   // wait until all archiving has completed
   const results = await Promise.all(promises);
+  const numReposConsidered = results.length;
   // https://stackoverflow.com/a/42317235/358804
-  const numReposArchived = results.filter(Boolean).length
+  const numReposArchived = results.filter(Boolean).length;
 
-  console.log(`${numReposArchived} repositories ${apply ? '' : 'would be '}archived.`);
+  let msg = `Out of ${numReposConsidered} repositories considered, ${numReposArchived} `;
+  if (!apply) {
+    msg += "would be ";
+  }
+  msg += "archived.";
+  console.log(msg);
 };
 
 const archiveStaleRepos = async (cutoff, opts) => {
@@ -125,10 +131,10 @@ const archiveStaleRepos = async (cutoff, opts) => {
 
   let responses;
   if (opts.org) {
-    console.log(`Archiving all stale repositories for ${opts.org}...`);
+    console.log(`Archiving stale repositories for ${opts.org}...`);
     responses = getOrgRepos(opts.org);
   } else {
-    console.log("Archiving all stale repositories...");
+    console.log("Archiving stale repositories...");
     responses = getUserRepos();
   }
 
