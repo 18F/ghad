@@ -1,5 +1,5 @@
 const moment = require("moment");
-const lib = require("./lib");
+const lib = require("./src/lib");
 
 require("yargs")
   .scriptName("ghad")
