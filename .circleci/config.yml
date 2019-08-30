@@ -1,5 +1,4 @@
-# version: 2.1
-version: 2
+version: 2.1
 jobs:
   plan:
     docker:
@@ -50,5 +49,13 @@ workflows:
   version: 2
   execute:
     jobs:
-      - plan
-      - apply
+      - plan:
+          filters:
+            branches:
+              ignore:
+                - master
+      - apply:
+          filters:
+            branches:
+              only:
+                - master
