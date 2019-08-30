@@ -1,13 +1,5 @@
 const moment = require("moment");
-const Octokit = require("@octokit/rest");
-
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-if (!GITHUB_TOKEN) {
-  throw new Error("GITHUB_TOKEN environment variable missing.");
-}
-const octokit = Octokit({
-  auth: GITHUB_TOKEN
-});
+const octokit = require("./client");
 
 const ORG = process.env.ORG;
 if (!ORG) {
