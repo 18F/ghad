@@ -78,7 +78,9 @@ const archiveIfStale = async (repo, cutoff, apply) => {
     } else {
       console.log(`Would archive ${repo.html_url}`);
     }
+    return true;
   }
+  return false;
 };
 
 const getUserRepos = () => {
@@ -87,15 +89,24 @@ const getUserRepos = () => {
 };
 
 const processRepoResponses = async (responses, cutoff, apply) => {
+  let numReposArchived = 0;
+
   for await (const response of responses) {
     for (const repo of response.data) {
       if (repo.archived) {
         continue;
       }
+
       // don't wait for this to happen
-      archiveIfStale(repo, cutoff, apply);
+      archiveIfStale(repo, cutoff, apply).then(wasArchived => {
+        if (wasArchived) {
+          numReposArchived += 1;
+        }
+      });
     }
   }
+
+  console.log(`${numReposArchived} repositories ${apply ? '' : 'would be '}archived.`);
 };
 
 const archiveStaleRepos = async (cutoff, opts) => {
