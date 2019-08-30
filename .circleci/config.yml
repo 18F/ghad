@@ -18,9 +18,7 @@ jobs:
 
       - run:
           name: Archive repositories (dry run)
-          command: node archive.js
-          environment:
-            ORG: 18F
+          command: node archive-all.js
 
   apply:
     docker:
@@ -40,9 +38,8 @@ jobs:
 
       - run:
           name: Archive repositories
-          command: node archive.js
+          command: node archive-all.js
           environment:
-            ORG: 18F
             FOR_REAL: true
 
 workflows:
