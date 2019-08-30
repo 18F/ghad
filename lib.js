@@ -86,6 +86,18 @@ const getUserRepos = () => {
   return octokit.paginate.iterator(options);
 };
 
+const processRepoResponses = async (responses, cutoff, apply) => {
+  for await (const response of responses) {
+    for (const repo of response.data) {
+      if (repo.archived) {
+        continue;
+      }
+      // don't wait for this to happen
+      archiveIfStale(repo, cutoff, apply);
+    }
+  }
+};
+
 const archiveStaleRepos = async (cutoff, opts) => {
   if (!opts.apply) {
     process.stdout.write("DRY RUN: ");
@@ -100,15 +112,7 @@ const archiveStaleRepos = async (cutoff, opts) => {
     responses = getUserRepos();
   }
 
-  for await (const response of responses) {
-    for (const repo of response.data) {
-      if (repo.archived) {
-        continue;
-      }
-      // don't wait for this to happen
-      archiveIfStale(repo, cutoff, opts.apply);
-    }
-  }
+  await processRepoResponses(responses, cutoff, opts.apply);
 
   console.log("Done.");
 };
