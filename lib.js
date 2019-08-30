@@ -1,7 +1,7 @@
 const moment = require("moment");
 const octokit = require("./client");
 
-const getRepos = (org) => {
+const getOrgRepos = (org) => {
   const options = octokit.search.repos.endpoint.merge({
     q: `user:${org} archived:false fork:true`
   });
@@ -82,8 +82,8 @@ const archiveIfStale = async (repo, cutoff) => {
 };
 
 const archiveStaleRepos = async (org, cutoff) => {
-  const repoSearch = getRepos(org);
-  for await (const response of repoSearch) {
+  const repoResponse = getOrgRepos(org);
+  for await (const response of repoResponse) {
     for (const repo of response.data) {
       // don't wait for this to happen
       archiveIfStale(repo, cutoff);
@@ -91,16 +91,20 @@ const archiveStaleRepos = async (org, cutoff) => {
   }
 };
 
-const getOrgs = () => {
-  const options = octokit.orgs.listForAuthenticatedUser.endpoint.DEFAULTS;
+const getUserRepos = () => {
+  const options = octokit.repos.list.endpoint.DEFAULTS;
   return octokit.paginate.iterator(options);
 };
 
 const archiveAllStaleRepos = async cutoff => {
-  const orgResponses = getOrgs();
-  for await (const response of orgResponses) {
-    for (const org of response.data) {
-      archiveStaleRepos(org.login, cutoff);
+  const repoResponse = getUserRepos();
+  for await (const response of repoResponse) {
+    for (const repo of response.data) {
+      if (repo.archived) {
+        continue;
+      }
+      // don't wait for this to happen
+      archiveIfStale(repo, cutoff);
     }
   }
 };

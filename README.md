@@ -23,7 +23,7 @@
    ORG=... GITHUB_TOKEN=... FOR_REAL=1 node archive.js
    ```
 
-The `archive-all.js` script can be used to archive old repositories from all organizations your user has access to.
+The `archive-all.js` script can be used to archive all old repositories your user has write access to across organizations.
 
 ## Warning
 
