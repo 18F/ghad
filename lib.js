@@ -88,23 +88,32 @@ const getUserRepos = () => {
   return octokit.paginate.iterator(options);
 };
 
-const processRepoResponses = async (responses, cutoff, apply) => {
-  let numReposArchived = 0;
-
+async function* reposFromResponses(responses) {
   for await (const response of responses) {
     for (const repo of response.data) {
       if (repo.archived) {
         continue;
       }
 
-      // don't wait for this to happen
-      archiveIfStale(repo, cutoff, apply).then(wasArchived => {
-        if (wasArchived) {
-          numReposArchived += 1;
-        }
-      });
+      yield repo;
     }
   }
+}
+
+const processRepoResponses = async (responses, cutoff, apply) => {
+  const repos = reposFromResponses(responses);
+  let promises = [];
+
+  for await (const repo of repos) {
+    // don't wait for this to happen
+    const promise = archiveIfStale(repo, cutoff, apply);
+    promises.push(promise);
+  }
+
+  // wait until all archiving has completed
+  const results = await Promise.all(promises);
+  // https://stackoverflow.com/a/42317235/358804
+  const numReposArchived = results.filter(Boolean).length
 
   console.log(`${numReposArchived} repositories ${apply ? '' : 'would be '}archived.`);
 };
