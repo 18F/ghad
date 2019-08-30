@@ -81,35 +81,38 @@ const archiveIfStale = async (repo, cutoff, apply) => {
   }
 };
 
-const archiveStaleRepos = async (org, cutoff, apply) => {
-  const repoResponse = getOrgRepos(org);
-  for await (const response of repoResponse) {
-    for (const repo of response.data) {
-      // don't wait for this to happen
-      archiveIfStale(repo, cutoff, apply);
-    }
-  }
-};
-
 const getUserRepos = () => {
   const options = octokit.repos.list.endpoint.DEFAULTS;
   return octokit.paginate.iterator(options);
 };
 
-const archiveAllStaleRepos = async (cutoff, apply) => {
-  const repoResponse = getUserRepos();
-  for await (const response of repoResponse) {
+const archiveStaleRepos = async (cutoff, opts) => {
+  if (!opts.apply) {
+    process.stdout.write("DRY RUN: ");
+  }
+
+  let responses;
+  if (opts.org) {
+    console.log(`Archiving all stale repositories for ${opts.org}...`);
+    responses = getOrgRepos(opts.org);
+  } else {
+    console.log("Archiving all stale repositories...");
+    responses = getUserRepos();
+  }
+
+  for await (const response of responses) {
     for (const repo of response.data) {
       if (repo.archived) {
         continue;
       }
       // don't wait for this to happen
-      archiveIfStale(repo, cutoff, apply);
+      archiveIfStale(repo, cutoff, opts.apply);
     }
   }
+
+  console.log("Done.");
 };
 
 module.exports = {
-  archiveStaleRepos,
-  archiveAllStaleRepos
+  archiveStaleRepos
 };

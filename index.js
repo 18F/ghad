@@ -27,18 +27,11 @@ require("yargs")
     },
     argv => {
       const cutoff = moment().subtract(argv.cutoff, "days");
-
-      if (!argv.apply) {
-        process.stdout.write("DRY RUN: ");
-      }
-
-      if (argv.org) {
-        console.log(`Archiving all stale repositories for ${argv.org}.`);
-        lib.archiveStaleRepos(argv.org, cutoff, argv.apply);
-      } else {
-        console.log("Archiving all stale repositories.");
-        lib.archiveAllStaleRepos(cutoff, argv.apply);
-      }
+      const opts = {
+        apply: argv.apply,
+        org: argv.org
+      };
+      lib.archiveStaleRepos(cutoff, opts);
     }
   )
   .strict()
