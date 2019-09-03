@@ -7,64 +7,57 @@ const {
   enableSecurityFixes
 } = require("./src/commands/enable-automated-security-fixes-for-org");
 
+const commonOpts = argv => {
+  return {
+    apply: argv.apply,
+    org: argv.org
+  };
+};
+
 require("yargs")
   .scriptName("ghad")
   .usage("$0 <cmd> [options]")
-  .option("apply", {
-    type: "boolean",
-    describe: "Perform the action; without this, will only be a dry run"
+  .options({
+    apply: {
+      type: "boolean",
+      describe: "Perform the action; without this, will only be a dry run"
+    },
+    org: {
+      describe: "Limit to repositories owned by this user/organization"
+    }
   })
   .command(
     "archive",
     "Archives inactive repositories.",
     yargs => {
-      yargs.options({
-        cutoff: {
-          type: "number",
-          default: 90,
-          describe:
-            "Number of days a repository has been inactive to be archived"
-        },
-        org: {
-          describe: "A GitHub user/organization to restrict the archiving to"
-        }
+      yargs.option("cutoff", {
+        type: "number",
+        default: 90,
+        describe: "Number of days a repository has been inactive to be archived"
       });
     },
     argv => {
       const cutoff = moment().subtract(argv.cutoff, "days");
-      const opts = {
-        apply: argv.apply,
-        org: argv.org
-      };
+      const opts = commonOpts(argv);
       archiveStaleRepos(cutoff, opts);
     }
   )
   .command(
     "enable-security-alerts",
     "Enables security alerts.",
-    yargs => {
-      yargs.option("org", {
-        describe: "Enable for repositories owned by this user/organization"
-      });
-    },
+    yargs => {},
     argv => {
-      const opts = {
-        apply: argv.apply,
-        org: argv.org
-      };
+      const opts = commonOpts(argv);
       enableSecurityAlerts(opts);
     }
   )
   .command(
-    "enable-security-fixes <org>",
+    "enable-security-fixes",
     "Enables automated security fixes. Note you'll need to enable security alerts first.",
-    yargs => {
-      yargs.positional("org", {
-        describe: "Enable for repositories owned by this user/organization"
-      });
-    },
+    yargs => {},
     argv => {
-      enableSecurityFixes(argv.org, argv.apply);
+      const opts = commonOpts(argv);
+      enableSecurityFixes(opts);
     }
   )
   .strict()

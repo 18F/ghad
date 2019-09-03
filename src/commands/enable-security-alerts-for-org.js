@@ -1,5 +1,4 @@
 const { getRepos } = require("../lib/repos");
-const pReduce = require("../lib/p-reduce");
 const delay = require("../lib/delay");
 const octokit = require("../lib/client");
 
@@ -35,7 +34,8 @@ const processRepos = async (repositories, apply) => {
     }
 
     if (apply) {
-      await enableSecurityAlertsForRepo(repository);
+      // don't wait
+      enableSecurityAlertsForRepo(repository);
     } else {
       console.log(`Would enable for ${repository.html_url}`);
     }

@@ -1,4 +1,4 @@
-const pReduce = require("../lib/p-reduce");
+const { getRepos } = require("../lib/repos");
 const delay = require("../lib/delay");
 const octokit = require("../lib/client");
 
@@ -27,35 +27,33 @@ ${error.documentation_url}
     });
 };
 
-const processRepos = (repositories, apply) =>
-  pReduce(repositories, repository => {
+const processRepos = async (repositories, apply) => {
+  for await (const repository of repositories) {
     if (repository.archived) {
-      return Promise.resolve();
+      continue;
     }
 
     if (apply) {
-      return enableSecurityFixesForRepo(repository);
+      // don' wait
+      enableSecurityFixesForRepo(repository);
     } else {
       console.log(`Would enable for ${repository.html_url}`);
-      return Promise.resolve();
     }
-  });
+  }
+};
 
-const enableSecurityFixes = (owner, apply) => {
-  const options = octokit.repos.listForOrg.endpoint.merge({
-    org: owner,
-    type: "all"
-  });
+const enableSecurityFixes = async opts => {
+  if (!opts.apply) {
+    process.stdout.write("DRY RUN: ");
+  }
 
-  octokit
-    .paginate(options)
-    .then(repositories => processRepos(repositories, apply))
-    .catch(error => {
-      console.error(`Getting repositories for organization ${owner} failed.
-${error.message} (${error.status})
-${error.documentation_url}
-`);
-    });
+  if (opts.org) {
+    console.log(`Enabling security fixes for ${opts.org}...`);
+  } else {
+    console.log("Enabling security fixes...");
+  }
+  const repos = getRepos(opts.org);
+  await processRepos(repos, opts.apply);
 };
 
 module.exports = {
