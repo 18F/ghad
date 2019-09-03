@@ -1,5 +1,5 @@
 const octokit = require("./client");
-const { getLatestEvent, shouldBeArchived } = require("./lib");
+const { getLatestEvent, hasDeprecationText } = require("./lib");
 
 jest.mock("./client");
 
@@ -18,10 +18,17 @@ describe("getLatestEvent()", () => {
   });
 });
 
-describe("shouldBeArchived()", () => {
-  test("excludes repositories that are explicitly 'deprecated'", async () => {
-    const repo = { description: "DEPRECATED for reasons unknown" };
-    const result = await shouldBeArchived(repo);
-    expect(result).toBe(true);
-  });
+describe("hasDeprecationText()", () => {
+  test.each([
+    ["DEPRECATED for reasons unknown", true],
+    ["not supported", true],
+    ["No Longer Supported", true],
+    ["other description", false]
+  ])(
+    "repositories with a description of '%s'",
+    (description, shouldArchive) => {
+      const result = hasDeprecationText(description);
+      expect(result).toBe(shouldArchive);
+    }
+  );
 });

@@ -49,10 +49,13 @@ const updatedSince = async (repo, cutoff) => {
   return false;
 };
 
+const hasDeprecationText = str =>
+  /\b(DEPRECATED|NO(T| LONGER) SUPPORTED)\b/i.test(str);
+
 const shouldBeArchived = async (repo, cutoff) => {
   // always archive "DEPRECATED" repositories
   const description = repo.description || "";
-  if (/DEPRECATED/i.test(description)) {
+  if (hasDeprecationText(description)) {
     return true;
   }
 
@@ -145,6 +148,6 @@ const archiveStaleRepos = async (cutoff, opts) => {
 
 module.exports = {
   getLatestEvent,
-  shouldBeArchived,
+  hasDeprecationText,
   archiveStaleRepos
 };
