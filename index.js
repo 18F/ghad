@@ -1,5 +1,5 @@
 const moment = require("moment");
-const lib = require("./src/lib");
+const { archiveStaleRepos } = require("./src/archive");
 
 require("yargs")
   .scriptName("ghad")
@@ -31,7 +31,7 @@ require("yargs")
         apply: argv.apply,
         org: argv.org
       };
-      lib.archiveStaleRepos(cutoff, opts);
+      archiveStaleRepos(cutoff, opts);
     }
   )
   .strict()

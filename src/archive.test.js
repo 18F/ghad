@@ -1,7 +1,7 @@
 const moment = require("moment");
 const nock = require("nock");
 const octokit = require("./client");
-const { getLatestEvent, attrAfter, hasDeprecationText } = require("./lib");
+const { getLatestEvent, attrAfter, hasDeprecationText } = require("./archive");
 
 nock.disableNetConnect();
 jest.mock("./client");
