@@ -148,6 +148,7 @@ const archiveStaleRepos = async (cutoff, opts) => {
 
 module.exports = {
   getLatestEvent,
+  attrAfter,
   hasDeprecationText,
   archiveStaleRepos
 };

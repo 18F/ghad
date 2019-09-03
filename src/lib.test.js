@@ -1,6 +1,7 @@
+const moment = require("moment");
 const nock = require("nock");
 const octokit = require("./client");
-const { getLatestEvent, hasDeprecationText } = require("./lib");
+const { getLatestEvent, attrAfter, hasDeprecationText } = require("./lib");
 
 nock.disableNetConnect();
 jest.mock("./client");
@@ -17,6 +18,24 @@ describe("getLatestEvent()", () => {
     };
     const event = await getLatestEvent(repo);
     expect(event.type).toBe("OtherEvent");
+  });
+});
+
+describe("attrAfter()", () => {
+  test.each([
+    [
+      "2011-01-26T19:14:43Z",
+      moment.utc({ y: 2011, m: 1, d: 26, h: 19, m: 14, s: 44 }),
+      false
+    ],
+    [
+      "2011-01-26T19:14:43Z",
+      moment.utc({ y: 2011, m: 1, d: 26, h: 19, m: 14, s: 42 }),
+      true
+    ]
+  ])("properly compares '%s' to '%s'", (input, cutoff, expected) => {
+    const result = attrAfter(input, cutoff);
+    expect(result).toBe(expected);
   });
 });
 
