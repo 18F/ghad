@@ -44,7 +44,7 @@ require("yargs")
   )
   .command(
     "enable-security-alerts",
-    "Enables security alerts.",
+    "Enables security alerts. https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies",
     yargs => {},
     argv => {
       const opts = commonOpts(argv);
@@ -53,7 +53,7 @@ require("yargs")
   )
   .command(
     "enable-security-fixes",
-    "Enables automated security fixes. Note you'll need to enable security alerts first.",
+    "Enables automated security fixes. Note you'll need to enable security alerts first. https://help.github.com/en/articles/configuring-automated-security-fixes",
     yargs => {},
     argv => {
       const opts = commonOpts(argv);
