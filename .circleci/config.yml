@@ -31,8 +31,8 @@ jobs:
           name: "Enable security alerts (apply: << parameters.apply >>)"
           command: node index.js enable-security-alerts <<# parameters.apply >>--apply<</ parameters.apply >>
       - run:
-          name: "Enable security fixes (apply: << parameters.apply >>)"
-          command: node index.js enable-security-fixes <<# parameters.apply >>--apply<</ parameters.apply >>
+          name: "Enable security fixes for PIFs (apply: << parameters.apply >>)"
+          command: node index.js enable-security-fixes --org presidential-innovation-fellows <<# parameters.apply >>--apply<</ parameters.apply >>
 
 workflows:
   version: 2
