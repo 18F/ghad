@@ -1,6 +1,8 @@
+const nock = require("nock");
 const octokit = require("./client");
 const { getLatestEvent, hasDeprecationText } = require("./lib");
 
+nock.disableNetConnect();
 jest.mock("./client");
 
 describe("getLatestEvent()", () => {
