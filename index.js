@@ -40,15 +40,19 @@ require("yargs")
     }
   )
   .command(
-    "enable-security-alerts <org>",
+    "enable-security-alerts",
     "Enables security alerts.",
     yargs => {
-      yargs.positional("org", {
+      yargs.option("org", {
         describe: "Enable for repositories owned by this user/organization"
       });
     },
     argv => {
-      enableSecurityAlerts(argv.org, argv.apply);
+      const opts = {
+        apply: argv.apply,
+        org: argv.org
+      };
+      enableSecurityAlerts(opts);
     }
   )
   .command(
