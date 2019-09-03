@@ -9,5 +9,7 @@ if (!GITHUB_TOKEN) {
   }
 }
 module.exports = Octokit({
-  auth: GITHUB_TOKEN
+  auth: GITHUB_TOKEN,
+  // https://developer.github.com/v3/previews/
+  previews: ["dorian-preview", "london-preview"]
 });

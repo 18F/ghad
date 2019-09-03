@@ -1,10 +1,10 @@
 const moment = require("moment");
 const nock = require("nock");
-const octokit = require("./client");
-const { getLatestEvent, attrAfter, hasDeprecationText } = require("./lib");
+const octokit = require("../lib/client");
+const { getLatestEvent, attrAfter, hasDeprecationText } = require("./archive");
 
 nock.disableNetConnect();
-jest.mock("./client");
+jest.mock("../lib/client");
 
 describe("getLatestEvent()", () => {
   test("filters external events", async () => {
