@@ -50,7 +50,7 @@ const updatedSince = async (repo, cutoff) => {
 };
 
 const shouldBeArchived = async (repo, cutoff) => {
-  // always archive "DEPRECATED" (repo, cutoff)sitories
+  // always archive "DEPRECATED" repositories
   const description = repo.description || "";
   if (/DEPRECATED/i.test(description)) {
     return true;
@@ -145,5 +145,6 @@ const archiveStaleRepos = async (cutoff, opts) => {
 
 module.exports = {
   getLatestEvent,
+  shouldBeArchived,
   archiveStaleRepos
 };
