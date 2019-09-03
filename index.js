@@ -3,6 +3,9 @@ const { archiveStaleRepos } = require("./src/commands/archive");
 const {
   enableSecurityAlerts
 } = require("./src/commands/enable-security-alerts-for-org");
+const {
+  enableSecurityFixes
+} = require("./src/commands/enable-automated-security-fixes-for-org");
 
 require("yargs")
   .scriptName("ghad")
@@ -41,12 +44,23 @@ require("yargs")
     "Enables security alerts.",
     yargs => {
       yargs.positional("org", {
-        describe:
-          "Enable the alerts for repositories in this GitHub user/organization"
+        describe: "Enable for repositories owned by this user/organization"
       });
     },
     argv => {
       enableSecurityAlerts(argv.org, argv.apply);
+    }
+  )
+  .command(
+    "enable-security-fixes <org>",
+    "Enables automated security fixes.",
+    yargs => {
+      yargs.positional("org", {
+        describe: "Enable for repositories owned by this user/organization"
+      });
+    },
+    argv => {
+      enableSecurityFixes(argv.org, argv.apply);
     }
   )
   .strict()
