@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/18F/ghad.svg?style=svg)](https://circleci.com/gh/18F/ghad)
 
-`ghad` is a command-line tool for managing a large number of repositories. It currently allows you to:
+`ghad` is a command-line tool for managing a large number of GitHub repositories. It currently allows you to:
 
 - Archive repositories that haven't been updated in a specified number of days
 - Enable [security alerts for vulnerable dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)
@@ -30,7 +30,7 @@ It can be run manually, or set up to run from a continuous integration system - 
 1. View the documentation.
 
    ```sh
-   node index.js --help
+   node cli.js --help
    ```
 
 ## Example usage
@@ -38,16 +38,16 @@ It can be run manually, or set up to run from a continuous integration system - 
 1. Run the script as a dry run.
 
    ```sh
-   node index.js archive --org <something>
+   node cli.js archive --org <something>
    ```
 
 1. To actually archive repositories:
 
    ```sh
-   node index.js archive --org <something> --apply
+   node cli.js archive --org <something> --apply
    ```
 
-The `--org` is optional. See `node index.js archive --help` for more info.
+The `--org` is optional. See `node cli.js archive --help` for more info.
 
 ## Usage in TTS
 
