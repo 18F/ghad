@@ -1,5 +1,5 @@
 const moment = require("moment");
-const { archiveStaleRepos } = require("./src/archive");
+const { archiveStaleRepos } = require("./src/commands/archive");
 
 require("yargs")
   .scriptName("ghad")

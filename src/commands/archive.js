@@ -1,6 +1,10 @@
 const moment = require("moment");
-const octokit = require("./client");
-const { getOrgRepos, getUserRepos, reposFromResponses } = require("./lib");
+const octokit = require("../lib/client");
+const {
+  getOrgRepos,
+  getUserRepos,
+  reposFromResponses
+} = require("../lib/repos");
 
 // https://developer.github.com/v3/#schema
 const parseGitHubTimestamp = str => moment(str, moment.ISO_8601);
