@@ -21,6 +21,10 @@ jobs:
           key: v1-dependencies-{{ checksum "package-lock.json" }}
 
       - run:
+          name: Run tests
+          command: npm test
+
+      - run:
           name: "Archive repositories (apply: << parameters.apply >>)"
           command: node index.js archive <<# parameters.apply >>--apply<</ parameters.apply >>
 
