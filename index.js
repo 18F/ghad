@@ -53,7 +53,7 @@ require("yargs")
   )
   .command(
     "enable-security-fixes <org>",
-    "Enables automated security fixes.",
+    "Enables automated security fixes. Note you'll need to enable security alerts first.",
     yargs => {
       yargs.positional("org", {
         describe: "Enable for repositories owned by this user/organization"
