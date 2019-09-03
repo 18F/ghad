@@ -1,10 +1,6 @@
 const moment = require("moment");
 const octokit = require("../lib/client");
-const {
-  getOrgRepos,
-  getUserRepos,
-  reposFromResponses
-} = require("../lib/repos");
+const { getRepos } = require("../lib/repos");
 
 // https://developer.github.com/v3/#schema
 const parseGitHubTimestamp = str => moment(str, moment.ISO_8601);
@@ -84,10 +80,8 @@ const archiveIfStale = async (repo, cutoff, apply) => {
   return false;
 };
 
-const processRepoResponses = async (responses, cutoff, apply) => {
-  const repos = reposFromResponses(responses);
+const processRepos = async (repos, cutoff, apply) => {
   let promises = [];
-
   for await (const repo of repos) {
     // don't wait for this to happen
     const promise = archiveIfStale(repo, cutoff, apply);
@@ -113,16 +107,13 @@ const archiveStaleRepos = async (cutoff, opts) => {
     process.stdout.write("DRY RUN: ");
   }
 
-  let responses;
   if (opts.org) {
     console.log(`Archiving stale repositories for ${opts.org}...`);
-    responses = getOrgRepos(opts.org);
   } else {
     console.log("Archiving stale repositories...");
-    responses = getUserRepos();
   }
-
-  await processRepoResponses(responses, cutoff, opts.apply);
+  const repos = getRepos(opts.org);
+  await processRepos(repos, cutoff, opts.apply);
 
   console.log("Done.");
 };

@@ -24,8 +24,15 @@ async function* reposFromResponses(responses) {
   }
 }
 
-module.exports = {
-  getOrgRepos,
-  getUserRepos,
-  reposFromResponses
+// org is optional
+const getRepos = org => {
+  let responses;
+  if (org) {
+    responses = getOrgRepos(org);
+  } else {
+    responses = getUserRepos();
+  }
+  return reposFromResponses(responses);
 };
+
+module.exports = { getRepos };
