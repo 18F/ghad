@@ -4,5 +4,8 @@
     "@octokit/rest": "^16.28.7",
     "moment": "^2.24.0",
     "yargs": "^14.0.0"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0"
   }
 }

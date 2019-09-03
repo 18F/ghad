@@ -144,5 +144,6 @@ const archiveStaleRepos = async (cutoff, opts) => {
 };
 
 module.exports = {
+  getLatestEvent,
   archiveStaleRepos
 };
