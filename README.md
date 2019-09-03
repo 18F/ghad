@@ -2,6 +2,14 @@
 
 [![CircleCI](https://circleci.com/gh/18F/ghad.svg?style=svg)](https://circleci.com/gh/18F/ghad)
 
+`ghad` is a command-line tool for managing a large number of repositories. It currently allows you to:
+
+- Archive repositories that haven't been updated in a specified number of days
+- Enable [security alerts for vulnerable dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)
+- Enable [automated security fixes](https://help.github.com/en/articles/configuring-automated-security-fixes)
+
+It can be run manually, or set up to run from a continuous integration system - see [the CircleCI configuration](.circleci/config.yml).
+
 ## Setup
 
 1. Install Node.js 10+.
@@ -41,6 +49,8 @@
 
 The `--org` is optional. See `node index.js archive --help` for more info.
 
-## Warning
+## Usage in TTS
 
-**_Keep write access to this repository restricted._** The associated GitHub token is that of an Owner ([**@18f-bot**](https://github.com/18f-bot)), so being able to run arbitrary commands in CI allows privilege escalation.
+`ghad` is run across [TTS GitHub repositories](https://handbook.18f.gov/github/#organizations) through the [**@18f-bot**](https://github.com/18f-bot). See [the CircleCI configuration](.circleci/config.yml).
+
+**Warning: _Keep write access to this repository restricted._** The associated GitHub token is that of an Owner, so being able to run arbitrary commands in CI allows privilege escalation.
