@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const moment = require("moment");
 const { archiveStaleRepos } = require("./src/commands/archive");
 const {
