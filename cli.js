@@ -60,5 +60,6 @@ require("yargs")
       enableSecurityFixes(opts);
     }
   )
+  .demandCommand()
   .strict()
   .help().argv;
