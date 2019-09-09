@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const moment = require("moment");
 const { archiveStaleRepos } = require("./src/commands/archive");
 const {
@@ -60,5 +62,6 @@ require("yargs")
       enableSecurityFixes(opts);
     }
   )
+  .demandCommand()
   .strict()
   .help().argv;

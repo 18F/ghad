@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/18F/ghad.svg?style=svg)](https://circleci.com/gh/18F/ghad)
 
-`ghad` is a command-line tool for managing a large number of repositories. It currently allows you to:
+`ghad` is a command-line tool for managing a large number of GitHub repositories. It currently allows you to:
 
 - Archive repositories that haven't been updated in a specified number of days
 - Enable [security alerts for vulnerable dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)
@@ -15,12 +15,6 @@ It can be run manually, or set up to run from a continuous integration system - 
 1. Install Node.js 10+.
 1. [Create a token.](https://github.com/settings/tokens/new?description=ghad&scopes=repo,read:org)
 1. Clone this repository.
-1. From this directory, install the dependencies.
-
-   ```sh
-   npm install
-   ```
-
 1. Set your GitHub token.
 
    ```sh
@@ -30,7 +24,7 @@ It can be run manually, or set up to run from a continuous integration system - 
 1. View the documentation.
 
    ```sh
-   node index.js --help
+   npx ghad --help
    ```
 
 ## Example usage
@@ -38,16 +32,16 @@ It can be run manually, or set up to run from a continuous integration system - 
 1. Run the script as a dry run.
 
    ```sh
-   node index.js archive --org <something>
+   npx ghad archive --org <something>
    ```
 
 1. To actually archive repositories:
 
    ```sh
-   node index.js archive --org <something> --apply
+   npx ghad archive --org <something> --apply
    ```
 
-The `--org` is optional. See `node index.js archive --help` for more info.
+The `--org` is optional. See `npx ghad archive --help` for more info.
 
 ## Usage in TTS
 
