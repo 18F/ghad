@@ -44,8 +44,9 @@ const processRepos = async (repositories, apply) => {
 
 const enableSecurityAlerts = async opts => {
   if (!opts.apply) {
-    process.stdout.write("DRY RUN: Enabling security alerts");
+    process.stdout.write("DRY RUN: ");
   }
+  process.stdout.write("Enabling security alerts");
   if (opts.org) {
     process.stdout.write(` for ${opts.org}`);
   }

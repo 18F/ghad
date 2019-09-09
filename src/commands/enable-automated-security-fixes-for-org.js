@@ -44,8 +44,9 @@ const processRepos = async (repositories, apply) => {
 
 const enableSecurityFixes = async opts => {
   if (!opts.apply) {
-    process.stdout.write("DRY RUN: Enabling automated security fixes");
+    process.stdout.write("DRY RUN: ");
   }
+  process.stdout.write("Enabling automated security fixes");
   if (opts.org) {
     process.stdout.write(` for ${opts.org}`);
   }
