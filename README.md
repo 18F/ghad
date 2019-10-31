@@ -45,6 +45,6 @@ The `--org` is optional. See `npx ghad archive --help` for more info.
 
 ## Usage in TTS
 
-`ghad` is run across [TTS GitHub repositories](https://handbook.18f.gov/github/#organizations) through the [**@18f-bot**](https://github.com/18f-bot). See [the CircleCI configuration](.circleci/config.yml).
+`ghad` is run across [TTS GitHub repositories](https://handbook.18f.gov/github/#organizations) through the [**@tts-bot**](https://github.com/tts-bot). See [the CircleCI configuration](.circleci/config.yml).
 
 **Warning: _Keep write access to this repository restricted._** The associated GitHub token is that of an Owner, so being able to run arbitrary commands in CI allows privilege escalation.
