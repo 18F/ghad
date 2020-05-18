@@ -2,16 +2,16 @@ const { getRepos } = require("../lib/repos");
 const delay = require("../lib/delay");
 const octokit = require("../lib/client");
 
-const enableSecurityFixesForRepo = repository => {
+const enableSecurityFixesForRepo = (repository) => {
   const repo = repository.name;
   const owner = repository.owner.login;
 
   return octokit.repos
     .enableAutomatedSecurityFixes({
       owner,
-      repo
+      repo,
     })
-    .then(response => {
+    .then((response) => {
       if (response && response.status === 204) {
         console.log(`Success for ${owner}/${repo}`);
       } else {
@@ -19,7 +19,7 @@ const enableSecurityFixesForRepo = repository => {
       }
       return delay(500);
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(`Failed for ${owner}/${repo}
 ${error.message}
 ${error.documentation_url}
@@ -42,7 +42,7 @@ const processRepos = async (repositories, apply) => {
   }
 };
 
-const enableSecurityFixes = async opts => {
+const enableSecurityFixes = async (opts) => {
   if (!opts.apply) {
     process.stdout.write("DRY RUN: ");
   }
@@ -59,5 +59,5 @@ const enableSecurityFixes = async opts => {
 };
 
 module.exports = {
-  enableSecurityFixes
+  enableSecurityFixes,
 };

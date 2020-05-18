@@ -2,16 +2,16 @@ const { getRepos } = require("../lib/repos");
 const delay = require("../lib/delay");
 const octokit = require("../lib/client");
 
-const enableSecurityAlertsForRepo = repository => {
+const enableSecurityAlertsForRepo = (repository) => {
   const repo = repository.name;
   const owner = repository.owner.login;
 
   return octokit.repos
     .enableVulnerabilityAlerts({
       owner,
-      repo
+      repo,
     })
-    .then(response => {
+    .then((response) => {
       if (response && response.status === 204) {
         console.log(`Success for ${owner}/${repo}`);
       } else {
@@ -19,7 +19,7 @@ const enableSecurityAlertsForRepo = repository => {
       }
       return delay(500);
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(`Failed for ${owner}/${repo}
 ${error.message}
 ${error.documentation_url}
@@ -42,7 +42,7 @@ const processRepos = async (repositories, apply) => {
   }
 };
 
-const enableSecurityAlerts = async opts => {
+const enableSecurityAlerts = async (opts) => {
   if (!opts.apply) {
     process.stdout.write("DRY RUN: ");
   }
@@ -59,5 +59,5 @@ const enableSecurityAlerts = async opts => {
 };
 
 module.exports = {
-  enableSecurityAlerts
+  enableSecurityAlerts,
 };
