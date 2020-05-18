@@ -1,5 +1,8 @@
 const nock = require("nock");
-const { enableSecurityFixesForRepo } = require("./enable-security-fixes");
+const {
+  enableSecurityFixesForRepo,
+  processRepos,
+} = require("./enable-security-fixes");
 
 nock.disableNetConnect();
 
@@ -14,6 +17,17 @@ const nockSuccess = () => {
     .reply(204);
 };
 
+const nockFail = () => {
+  // https://developer.github.com/v3/#abuse-rate-limits
+  nock("https://api.github.com")
+    .put(`/repos/${repo.owner.login}/${repo.name}/automated-security-fixes`)
+    .reply(403, {
+      message:
+        "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.",
+      documentation_url: "https://developer.github.com/v3/#abuse-rate-limits",
+    });
+};
+
 afterEach(nock.cleanAll);
 // https://github.com/nock/nock#memory-issues-with-jest
 afterAll(nock.restore);
@@ -25,16 +39,24 @@ describe("enableSecurityFixesForRepo()", () => {
   });
 
   test("reflects a failure", () => {
-    // https://developer.github.com/v3/#abuse-rate-limits
-    nock("https://api.github.com")
-      .put(`/repos/${repo.owner.login}/${repo.name}/automated-security-fixes`)
-      .reply(403, {
-        message:
-          "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.",
-        documentation_url: "https://developer.github.com/v3/#abuse-rate-limits",
-      });
+    nockFail();
 
     const promise = enableSecurityFixesForRepo(repo);
+    return expect(promise).rejects.toThrow(/abuse/);
+  });
+});
+
+describe("processRepos()", () => {
+  test("runs across repositories", () => {
+    nockSuccess();
+
+    return processRepos([repo], true);
+  });
+
+  test("reflects a failure", () => {
+    nockFail();
+
+    const promise = processRepos([repo], true);
     return expect(promise).rejects.toThrow(/abuse/);
   });
 });

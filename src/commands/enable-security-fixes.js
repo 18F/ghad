@@ -29,18 +29,23 @@ ${error.documentation_url}
 };
 
 const processRepos = async (repositories, apply) => {
+  const promises = [];
+
   for await (const repository of repositories) {
     if (repository.archived) {
       continue;
     }
 
     if (apply) {
-      // don' wait
-      enableSecurityFixesForRepo(repository);
+      // don't wait
+      const promise = enableSecurityFixesForRepo(repository);
+      promises.push(promise);
     } else {
       console.log(`Would enable for ${repository.html_url}`);
     }
   }
+
+  return Promise.all(promises);
 };
 
 const enableSecurityFixes = async (opts) => {
@@ -56,10 +61,16 @@ const enableSecurityFixes = async (opts) => {
   );
 
   const repos = getRepos(opts.org);
-  await processRepos(repos, opts.apply);
+  try {
+    await processRepos(repos, opts.apply);
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
 };
 
 module.exports = {
   enableSecurityFixesForRepo,
+  processRepos,
   enableSecurityFixes,
 };
