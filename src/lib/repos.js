@@ -1,4 +1,5 @@
 const octokit = require("./client");
+const delay = require("./delay");
 
 const getOrgRepos = (org) => {
   const options = octokit.search.repos.endpoint.merge({
@@ -36,7 +37,7 @@ const getRepos = (org) => {
 };
 
 const processRepos = async (repositories, fn, apply) => {
-  const promises = [];
+  const results = [];
 
   for await (const repository of repositories) {
     if (repository.archived) {
@@ -44,14 +45,20 @@ const processRepos = async (repositories, fn, apply) => {
     }
 
     if (apply) {
-      const promise = fn(repository);
-      promises.push(promise);
+      if (results.length) {
+        // not the first request
+        // https://developer.github.com/v3/guides/best-practices-for-integrators/#dealing-with-abuse-rate-limits
+        await delay(1000);
+      }
+
+      const result = await fn(repository);
+      results.push(result);
     } else {
       console.log(`Would enable for ${repository.html_url}`);
     }
   }
 
-  return Promise.all(promises);
+  return results;
 };
 
 module.exports = { getRepos, processRepos };

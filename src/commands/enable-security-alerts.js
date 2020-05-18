@@ -1,5 +1,4 @@
 const { getRepos, processRepos } = require("../lib/repos");
-const delay = require("../lib/delay");
 const octokit = require("../lib/client");
 
 const enableSecurityAlertsForRepo = (repository) => {
@@ -17,7 +16,6 @@ const enableSecurityAlertsForRepo = (repository) => {
       } else {
         console.log(`Failed for ${owner}/${repo}`);
       }
-      return delay(500);
     })
     .catch((error) => {
       console.error(`Failed for ${owner}/${repo}
