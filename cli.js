@@ -4,10 +4,10 @@ const moment = require("moment");
 const { archiveStaleRepos } = require("./src/commands/archive");
 const {
   enableSecurityAlerts
-} = require("./src/commands/enable-security-alerts-for-org");
+} = require("./src/commands/enable-security-alerts");
 const {
   enableSecurityFixes
-} = require("./src/commands/enable-automated-security-fixes-for-org");
+} = require("./src/commands/enable-security-fixes");
 
 const commonOpts = argv => {
   return {
