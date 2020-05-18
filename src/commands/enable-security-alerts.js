@@ -24,10 +24,13 @@ const enableSecurityAlertsForRepo = (repository) => {
 ${error.message}
 ${error.documentation_url}
 `);
+      throw error;
     });
 };
 
 const processRepos = async (repositories, apply) => {
+  const promises = [];
+
   for await (const repository of repositories) {
     if (repository.archived) {
       continue;
@@ -35,11 +38,14 @@ const processRepos = async (repositories, apply) => {
 
     if (apply) {
       // don't wait
-      enableSecurityAlertsForRepo(repository);
+      const promise = enableSecurityAlertsForRepo(repository);
+      promises.push(promise);
     } else {
       console.log(`Would enable for ${repository.html_url}`);
     }
   }
+
+  return Promise.all(promises);
 };
 
 const enableSecurityAlerts = async (opts) => {
@@ -54,11 +60,17 @@ const enableSecurityAlerts = async (opts) => {
     `... Note that repositories will be listed even if they have alerts enabled already.`
   );
 
-  const repos = getRepos(opts.org);
-  await processRepos(repos, opts.apply);
+  try {
+    const repos = getRepos(opts.org);
+    await processRepos(repos, opts.apply);
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
 };
 
 module.exports = {
   enableSecurityAlertsForRepo,
+  processRepos,
   enableSecurityAlerts,
 };

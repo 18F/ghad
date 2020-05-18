@@ -60,8 +60,8 @@ const enableSecurityFixes = async (opts) => {
     `... Note that repositories will be listed even if they have automated security fixes enabled already.`
   );
 
-  const repos = getRepos(opts.org);
   try {
+    const repos = getRepos(opts.org);
     await processRepos(repos, opts.apply);
   } catch (err) {
     console.error(err.message);
