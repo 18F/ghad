@@ -59,5 +59,6 @@ const enableSecurityFixes = async (opts) => {
 };
 
 module.exports = {
+  enableSecurityFixesForRepo,
   enableSecurityFixes,
 };

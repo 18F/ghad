@@ -59,5 +59,6 @@ const enableSecurityAlerts = async (opts) => {
 };
 
 module.exports = {
+  enableSecurityAlertsForRepo,
   enableSecurityAlerts,
 };
