@@ -1,8 +1,8 @@
 const octokit = require("./client");
 
-const getOrgRepos = org => {
+const getOrgRepos = (org) => {
   const options = octokit.search.repos.endpoint.merge({
-    q: `user:${org} archived:false fork:true`
+    q: `user:${org} archived:false fork:true`,
   });
   return octokit.paginate.iterator(options);
 };
@@ -25,7 +25,7 @@ async function* reposFromResponses(responses) {
 }
 
 // org is optional
-const getRepos = org => {
+const getRepos = (org) => {
   let responses;
   if (org) {
     responses = getOrgRepos(org);
@@ -35,4 +35,23 @@ const getRepos = org => {
   return reposFromResponses(responses);
 };
 
-module.exports = { getRepos };
+const processRepos = async (repositories, fn, apply) => {
+  const promises = [];
+
+  for await (const repository of repositories) {
+    if (repository.archived) {
+      continue;
+    }
+
+    if (apply) {
+      const promise = fn(repository);
+      promises.push(promise);
+    } else {
+      console.log(`Would enable for ${repository.html_url}`);
+    }
+  }
+
+  return Promise.all(promises);
+};
+
+module.exports = { getRepos, processRepos };

@@ -1,4 +1,4 @@
-const { getRepos } = require("../lib/repos");
+const { getRepos, processRepos } = require("../lib/repos");
 const delay = require("../lib/delay");
 const octokit = require("../lib/client");
 
@@ -28,26 +28,6 @@ ${error.documentation_url}
     });
 };
 
-const processRepos = async (repositories, apply) => {
-  const promises = [];
-
-  for await (const repository of repositories) {
-    if (repository.archived) {
-      continue;
-    }
-
-    if (apply) {
-      // don't wait
-      const promise = enableSecurityFixesForRepo(repository);
-      promises.push(promise);
-    } else {
-      console.log(`Would enable for ${repository.html_url}`);
-    }
-  }
-
-  return Promise.all(promises);
-};
-
 const enableSecurityFixes = async (opts) => {
   if (!opts.apply) {
     process.stdout.write("DRY RUN: ");
@@ -62,7 +42,7 @@ const enableSecurityFixes = async (opts) => {
 
   try {
     const repos = getRepos(opts.org);
-    await processRepos(repos, opts.apply);
+    await processRepos(repos, enableSecurityFixesForRepo, opts.apply);
   } catch (err) {
     console.error(err.message);
     process.exit(1);
@@ -71,6 +51,5 @@ const enableSecurityFixes = async (opts) => {
 
 module.exports = {
   enableSecurityFixesForRepo,
-  processRepos,
   enableSecurityFixes,
 };

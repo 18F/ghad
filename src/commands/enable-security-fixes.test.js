@@ -1,8 +1,5 @@
 const nock = require("nock");
-const {
-  enableSecurityFixesForRepo,
-  processRepos,
-} = require("./enable-security-fixes");
+const { enableSecurityFixesForRepo } = require("./enable-security-fixes");
 
 nock.disableNetConnect();
 
@@ -42,21 +39,6 @@ describe("enableSecurityFixesForRepo()", () => {
     nockFail();
 
     const promise = enableSecurityFixesForRepo(repo);
-    return expect(promise).rejects.toThrow(/abuse/);
-  });
-});
-
-describe("processRepos()", () => {
-  test("runs across repositories", () => {
-    nockSuccess();
-
-    return processRepos([repo], true);
-  });
-
-  test("reflects a failure", () => {
-    nockFail();
-
-    const promise = processRepos([repo], true);
     return expect(promise).rejects.toThrow(/abuse/);
   });
 });

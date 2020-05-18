@@ -1,8 +1,5 @@
 const nock = require("nock");
-const {
-  enableSecurityAlertsForRepo,
-  processRepos,
-} = require("./enable-security-alerts");
+const { enableSecurityAlertsForRepo } = require("./enable-security-alerts");
 
 nock.disableNetConnect();
 
@@ -42,20 +39,6 @@ describe("enableSecurityAlertsForRepo()", () => {
     nockFail();
 
     const promise = enableSecurityAlertsForRepo(repo);
-    return expect(promise).rejects.toThrow(/abuse/);
-  });
-});
-
-describe("processRepos()", () => {
-  test("runs across repositories", () => {
-    nockSuccess();
-    return processRepos([repo], true);
-  });
-
-  test("reflects a failure", () => {
-    nockFail();
-
-    const promise = processRepos([repo], true);
     return expect(promise).rejects.toThrow(/abuse/);
   });
 });
