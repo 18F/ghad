@@ -24,6 +24,7 @@ const enableSecurityFixesForRepo = (repository) => {
 ${error.message}
 ${error.documentation_url}
 `);
+      throw error;
     });
 };
 

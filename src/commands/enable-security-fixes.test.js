@@ -23,4 +23,18 @@ describe("enableSecurityFixesForRepo()", () => {
     nockSuccess();
     return enableSecurityFixesForRepo(repo);
   });
+
+  test("reflects a failure", () => {
+    // https://developer.github.com/v3/#abuse-rate-limits
+    nock("https://api.github.com")
+      .put(`/repos/${repo.owner.login}/${repo.name}/automated-security-fixes`)
+      .reply(403, {
+        message:
+          "You have triggered an abuse detection mechanism and have been temporarily blocked from content creation. Please retry your request again later.",
+        documentation_url: "https://developer.github.com/v3/#abuse-rate-limits",
+      });
+
+    const promise = enableSecurityFixesForRepo(repo);
+    return expect(promise).rejects.toThrow(/abuse/);
+  });
 });
