@@ -1,5 +1,6 @@
 const moment = require("moment");
 const octokit = require("../lib/client");
+const delay = require("../lib/delay");
 const { getRepos } = require("../lib/repos");
 
 // https://developer.github.com/v3/#schema
@@ -72,6 +73,9 @@ const archiveIfStale = async (repo, cutoff, apply) => {
     if (apply) {
       await archiveRepo(repo);
       console.log(`Archived ${repo.html_url}`);
+
+      // https://developer.github.com/v3/guides/best-practices-for-integrators/#dealing-with-abuse-rate-limits
+      await delay(1000);
     } else {
       console.log(`Would archive ${repo.html_url}`);
     }
