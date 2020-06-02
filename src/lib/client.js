@@ -1,4 +1,4 @@
-const Octokit = require("@octokit/rest");
+const { Octokit } = require("@octokit/rest");
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 if (!GITHUB_TOKEN) {
@@ -8,8 +8,9 @@ if (!GITHUB_TOKEN) {
     throw new Error("GITHUB_TOKEN environment variable missing.");
   }
 }
-module.exports = Octokit({
+
+module.exports = new Octokit({
   auth: GITHUB_TOKEN,
   // https://developer.github.com/v3/previews/
-  previews: ["dorian-preview", "london-preview"]
+  previews: ["dorian-preview", "london-preview"],
 });
