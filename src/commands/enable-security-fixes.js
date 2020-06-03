@@ -1,4 +1,4 @@
-const { getRepos } = require("../lib/repos");
+const { getRepos, processRepos } = require("../lib/repos");
 const delay = require("../lib/delay");
 const octokit = require("../lib/client");
 
@@ -24,22 +24,8 @@ const enableSecurityFixesForRepo = (repository) => {
 ${error.message}
 ${error.documentation_url}
 `);
+      throw error;
     });
-};
-
-const processRepos = async (repositories, apply) => {
-  for await (const repository of repositories) {
-    if (repository.archived) {
-      continue;
-    }
-
-    if (apply) {
-      // don' wait
-      enableSecurityFixesForRepo(repository);
-    } else {
-      console.log(`Would enable for ${repository.html_url}`);
-    }
-  }
 };
 
 const enableSecurityFixes = async (opts) => {
@@ -54,8 +40,13 @@ const enableSecurityFixes = async (opts) => {
     `... Note that repositories will be listed even if they have automated security fixes enabled already.`
   );
 
-  const repos = getRepos(opts.org);
-  await processRepos(repos, opts.apply);
+  try {
+    const repos = getRepos(opts.org);
+    await processRepos(repos, enableSecurityFixesForRepo, opts.apply);
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
 };
 
 module.exports = {
