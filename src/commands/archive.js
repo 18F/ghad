@@ -1,20 +1,21 @@
 const moment = require("moment");
 const octokit = require("../lib/client");
+const delay = require("../lib/delay");
 const { getRepos } = require("../lib/repos");
 
 // https://developer.github.com/v3/#schema
-const parseGitHubTimestamp = str => moment(str, moment.ISO_8601);
+const parseGitHubTimestamp = (str) => moment(str, moment.ISO_8601);
 
-const getLatestEvent = async repo => {
+const getLatestEvent = async (repo) => {
   const eventResponse = await octokit.activity.listRepoEvents({
     owner: repo.owner.login,
-    repo: repo.name
+    repo: repo.name,
   });
   // filter out certain events
   // https://developer.github.com/v3/activity/events/types/
   const IGNORED_EVENTS = ["ForkEvent", "StarEvent", "WatchEvent"];
   const events = eventResponse.data.filter(
-    event => !IGNORED_EVENTS.includes(event.type)
+    (event) => !IGNORED_EVENTS.includes(event.type)
   );
   return events[0];
 };
@@ -43,7 +44,7 @@ const updatedSince = async (repo, cutoff) => {
   return false;
 };
 
-const hasDeprecationText = str =>
+const hasDeprecationText = (str) =>
   /\b(DEPRECATED|NO(T| LONGER) SUPPORTED)\b/i.test(str);
 
 const shouldBeArchived = async (repo, cutoff) => {
@@ -58,11 +59,11 @@ const shouldBeArchived = async (repo, cutoff) => {
   return !recentlyUpdated;
 };
 
-const archiveRepo = repo => {
+const archiveRepo = (repo) => {
   return octokit.repos.update({
     owner: repo.owner.login,
     repo: repo.name,
-    archived: true
+    archived: true,
   });
 };
 
@@ -72,6 +73,9 @@ const archiveIfStale = async (repo, cutoff, apply) => {
     if (apply) {
       await archiveRepo(repo);
       console.log(`Archived ${repo.html_url}`);
+
+      // https://developer.github.com/v3/guides/best-practices-for-integrators/#dealing-with-abuse-rate-limits
+      await delay(1000);
     } else {
       console.log(`Would archive ${repo.html_url}`);
     }
@@ -122,5 +126,5 @@ module.exports = {
   getLatestEvent,
   attrAfter,
   hasDeprecationText,
-  archiveStaleRepos
+  archiveStaleRepos,
 };

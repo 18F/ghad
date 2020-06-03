@@ -6,10 +6,10 @@ const repo = {
 };
 
 describe("processRepos()", () => {
-  test("runs across repositories", () => {
+  test("runs across repositories", async () => {
     const fn = () => Promise.resolve("foo");
-    const promise = processRepos([repo], fn, true);
-    return expect(promise).resolves.toEqual(["foo"]);
+    const results = await processRepos([repo], fn, true);
+    expect(results).toEqual(["foo"]);
   });
 
   test("reflects a failure", () => {
