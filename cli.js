@@ -1,5 +1,4 @@
 import moment from "moment";
-import yargs from "yargs";
 import { archiveStaleRepos } from "./src/commands/archive";
 import { enableSecurityAlerts } from "./src/commands/enable-security-alerts";
 import { enableSecurityFixes } from "./src/commands/enable-security-fixes";
@@ -11,7 +10,7 @@ const commonOpts = (argv) => {
   };
 };
 
-yargs
+require("yargs")
   .scriptName("ghad")
   .usage("$0 <cmd> [options]")
   .options({
