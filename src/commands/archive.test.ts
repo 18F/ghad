@@ -1,5 +1,6 @@
 import moment from "moment";
 import nock from "nock";
+import { mocked } from "ts-jest/utils";
 import octokit from "../lib/client";
 import { getLatestEvent, attrAfter, hasDeprecationText } from "./archive";
 
@@ -8,8 +9,11 @@ jest.mock("../lib/client");
 
 describe("getLatestEvent()", () => {
   test("filters external events", async () => {
-    octokit.activity.listRepoEvents.mockResolvedValue({
+    mocked(octokit.activity.listRepoEvents).mockResolvedValue({
       data: [{ type: "ForkEvent" }, { type: "OtherEvent" }],
+      headers: {},
+      status: 200,
+      url: "",
     });
 
     const repo = {
