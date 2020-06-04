@@ -1,12 +1,17 @@
 import moment from "moment";
 import octokit from "../lib/client";
 import delay from "../lib/delay";
-import { getRepos } from "../lib/repos";
+import { getRepos, Repo, Repos } from "../lib/repos";
+import { CommonOpts } from "../../cli";
+
+interface Event {
+  type: string;
+}
 
 // https://developer.github.com/v3/#schema
-const parseGitHubTimestamp = (str) => moment(str, moment.ISO_8601);
+const parseGitHubTimestamp = (str: string) => moment(str, moment.ISO_8601);
 
-export const getLatestEvent = async (repo) => {
+export const getLatestEvent = async (repo: Repo) => {
   const eventResponse = await octokit.activity.listRepoEvents({
     owner: repo.owner.login,
     repo: repo.name,
@@ -15,17 +20,17 @@ export const getLatestEvent = async (repo) => {
   // https://developer.github.com/v3/activity/events/types/
   const IGNORED_EVENTS = ["ForkEvent", "StarEvent", "WatchEvent"];
   const events = eventResponse.data.filter(
-    (event) => !IGNORED_EVENTS.includes(event.type)
+    (event: Event) => !IGNORED_EVENTS.includes(event.type)
   );
   return events[0];
 };
 
-export const attrAfter = (dateStr, cutoff) => {
+export const attrAfter = (dateStr: string, cutoff: moment.Moment) => {
   const date = parseGitHubTimestamp(dateStr);
   return date.isAfter(cutoff);
 };
 
-const updatedSince = async (repo, cutoff) => {
+const updatedSince = async (repo: Repo, cutoff: moment.Moment) => {
   if (attrAfter(repo.updated_at, cutoff)) {
     return true;
   }
@@ -44,10 +49,10 @@ const updatedSince = async (repo, cutoff) => {
   return false;
 };
 
-export const hasDeprecationText = (str) =>
+export const hasDeprecationText = (str: string) =>
   /\b(DEPRECATED|NO(T| LONGER) SUPPORTED)\b/i.test(str);
 
-const shouldBeArchived = async (repo, cutoff) => {
+const shouldBeArchived = async (repo: Repo, cutoff: moment.Moment) => {
   // always archive "DEPRECATED" repositories
   const description = repo.description || "";
   if (hasDeprecationText(description)) {
@@ -59,7 +64,7 @@ const shouldBeArchived = async (repo, cutoff) => {
   return !recentlyUpdated;
 };
 
-const archiveRepo = (repo) => {
+const archiveRepo = (repo: Repo) => {
   return octokit.repos.update({
     owner: repo.owner.login,
     repo: repo.name,
@@ -67,7 +72,11 @@ const archiveRepo = (repo) => {
   });
 };
 
-const archiveIfStale = async (repo, cutoff, apply) => {
+const archiveIfStale = async (
+  repo: Repo,
+  cutoff: moment.Moment,
+  apply: boolean
+) => {
   const archive = await shouldBeArchived(repo, cutoff);
   if (archive) {
     if (apply) {
@@ -84,7 +93,11 @@ const archiveIfStale = async (repo, cutoff, apply) => {
   return false;
 };
 
-const processRepos = async (repos, cutoff, apply) => {
+const processRepos = async (
+  repos: Repos,
+  cutoff: moment.Moment,
+  apply: boolean
+) => {
   let promises = [];
   for await (const repo of repos) {
     // don't wait for this to happen
@@ -106,7 +119,10 @@ const processRepos = async (repos, cutoff, apply) => {
   console.log(msg);
 };
 
-export const archiveStaleRepos = async (cutoff, opts) => {
+export const archiveStaleRepos = async (
+  cutoff: moment.Moment,
+  opts: CommonOpts
+) => {
   if (!opts.apply) {
     process.stdout.write("DRY RUN: ");
   }

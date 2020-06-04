@@ -1,16 +1,22 @@
 import moment from "moment";
+import yargs from "yargs";
 import { archiveStaleRepos } from "./src/commands/archive";
 import { enableSecurityAlerts } from "./src/commands/enable-security-alerts";
 import { enableSecurityFixes } from "./src/commands/enable-security-fixes";
 
-const commonOpts = (argv) => {
+export interface CommonOpts {
+  apply: boolean;
+  org: string;
+}
+
+const commonOpts = (argv: any): CommonOpts => {
   return {
     apply: argv.apply,
     org: argv.org,
   };
 };
 
-require("yargs")
+yargs
   .scriptName("ghad")
   .usage("$0 <cmd> [options]")
   .options({

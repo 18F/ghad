@@ -1,12 +1,8 @@
 import nock from "nock";
 import { enableSecurityAlertsForRepo } from "./enable-security-alerts";
+import { repo } from "../lib/test-helper";
 
 nock.disableNetConnect();
-
-const repo = {
-  name: "test-repo",
-  owner: { login: "test-org" },
-};
 
 const nockSuccess = () => {
   nock("https://api.github.com")

@@ -1,7 +1,8 @@
-import { getRepos, processRepos } from "../lib/repos";
+import { getRepos, processRepos, Repo } from "../lib/repos";
 import octokit from "../lib/client";
+import { CommonOpts } from "../../cli";
 
-export const enableSecurityAlertsForRepo = (repository) => {
+export const enableSecurityAlertsForRepo = (repository: Repo) => {
   const repo = repository.name;
   const owner = repository.owner.login;
 
@@ -26,7 +27,7 @@ ${error.documentation_url}
     });
 };
 
-export const enableSecurityAlerts = async (opts) => {
+export const enableSecurityAlerts = async (opts: CommonOpts) => {
   if (!opts.apply) {
     process.stdout.write("DRY RUN: ");
   }

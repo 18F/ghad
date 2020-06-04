@@ -1,9 +1,5 @@
 import { processRepos } from "./repos";
-
-const repo = {
-  name: "test-repo",
-  owner: { login: "test-org" },
-};
+import { repo } from "./test-helper";
 
 describe("processRepos()", () => {
   test("runs across repositories", async () => {

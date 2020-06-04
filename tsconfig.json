@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true
   }
 }

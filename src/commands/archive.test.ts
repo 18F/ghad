@@ -3,6 +3,7 @@ import nock from "nock";
 import { mocked } from "ts-jest/utils";
 import octokit from "../lib/client";
 import { getLatestEvent, attrAfter, hasDeprecationText } from "./archive";
+import { repo } from "../lib/test-helper";
 
 nock.disableNetConnect();
 jest.mock("../lib/client");
@@ -16,10 +17,6 @@ describe("getLatestEvent()", () => {
       url: "",
     });
 
-    const repo = {
-      name: "test-repo",
-      owner: { login: "test-org" },
-    };
     const event = await getLatestEvent(repo);
     expect(event.type).toBe("OtherEvent");
   });

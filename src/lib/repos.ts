@@ -1,7 +1,22 @@
 import octokit from "./client";
 import delay from "./delay";
+import { OctokitResponse } from "@octokit/types";
 
-const getOrgRepos = (org) => {
+export interface Repo {
+  archived: boolean;
+  description: string;
+  html_url: string;
+  name: string;
+  owner: { login: string };
+  pushed_at: string;
+  updated_at: string;
+}
+
+export type Repos = Iterable<Repo>;
+
+type Responses = Iterable<OctokitResponse<Repos>>;
+
+const getOrgRepos = (org: string) => {
   const options = octokit.search.repos.endpoint.merge({
     q: `user:${org} archived:false fork:true`,
   });
@@ -13,7 +28,7 @@ const getUserRepos = () => {
   return octokit.paginate.iterator(options);
 };
 
-async function* reposFromResponses(responses) {
+async function* reposFromResponses(responses: Responses) {
   for await (const response of responses) {
     for (const repo of response.data) {
       if (repo.archived) {
@@ -26,17 +41,21 @@ async function* reposFromResponses(responses) {
 }
 
 // org is optional
-export const getRepos = (org) => {
+export const getRepos = (org: string) => {
   let responses;
   if (org) {
     responses = getOrgRepos(org);
   } else {
     responses = getUserRepos();
   }
-  return reposFromResponses(responses);
+  return reposFromResponses(responses) as Repos;
 };
 
-export const processRepos = async (repositories, fn, apply) => {
+export const processRepos = async (
+  repositories: Repos,
+  fn: (repo: Repo) => Promise<unknown>,
+  apply: boolean
+) => {
   const results = [];
 
   for await (const repository of repositories) {
