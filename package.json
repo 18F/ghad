@@ -1,6 +1,6 @@
 {
   "name": "ghad",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A command-line tool for managing a large number of GitHub repositories",
   "keywords": [
     "github",
