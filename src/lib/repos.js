@@ -13,10 +13,11 @@ const getUserRepos = () => {
   return octokit.paginate.iterator(options);
 };
 
+// generator function
 async function* reposFromResponses(responses) {
   for await (const response of responses) {
     for (const repo of response.data) {
-      if (repo.archived) {
+      if (repo.archived || !repo.permissions.admin) {
         continue;
       }
 
@@ -40,13 +41,10 @@ const processRepos = async (repositories, fn, apply) => {
   const results = [];
 
   for await (const repository of repositories) {
-    if (repository.archived) {
-      continue;
-    }
-
     if (apply) {
-      if (results.length) {
+      if (results.length > 0) {
         // not the first request
+
         // https://developer.github.com/v3/guides/best-practices-for-integrators/#dealing-with-abuse-rate-limits
         await delay(1000);
       }
