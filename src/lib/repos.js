@@ -17,7 +17,7 @@ const getUserRepos = () => {
 async function* reposFromResponses(responses) {
   for await (const response of responses) {
     for (const repo of response.data) {
-      if (repo.archived) {
+      if (repo.archived || !repo.permissions.admin) {
         continue;
       }
 
