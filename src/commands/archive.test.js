@@ -25,12 +25,12 @@ describe("attrAfter()", () => {
   test.each([
     [
       "2011-01-26T19:14:43Z",
-      moment.utc({ y: 2011, m: 1, d: 26, h: 19, m: 14, s: 44 }),
+      moment.utc({ y: 2011, M: 0, d: 26, h: 19, m: 14, s: 44 }),
       false,
     ],
     [
       "2011-01-26T19:14:43Z",
-      moment.utc({ y: 2011, m: 1, d: 26, h: 19, m: 14, s: 42 }),
+      moment.utc({ y: 2011, M: 0, d: 26, h: 19, m: 14, s: 42 }),
       true,
     ],
   ])("properly compares '%s' to '%s'", (input, cutoff, expected) => {
