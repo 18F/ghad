@@ -1,7 +1,7 @@
-const moment = require("moment");
-const nock = require("nock");
-const octokit = require("../lib/client");
-const { getLatestEvent, attrAfter, hasDeprecationText } = require("./archive");
+import moment from 'moment';
+import nock from 'nock';
+import octokit from '../lib/client';
+import { getLatestEvent, attrAfter, hasDeprecationText } from './archive';
 
 nock.disableNetConnect();
 jest.mock("../lib/client");

@@ -1,12 +1,12 @@
-const moment = require("moment");
-const octokit = require("../lib/client");
-const delay = require("../lib/delay");
-const { getRepos } = require("../lib/repos");
+import moment from "moment";
+import octokit from "../lib/client";
+import delay from "../lib/delay";
+import { getRepos } from "../lib/repos";
 
 // https://developer.github.com/v3/#schema
 const parseGitHubTimestamp = (str) => moment(str, moment.ISO_8601);
 
-const getLatestEvent = async (repo) => {
+export const getLatestEvent = async (repo) => {
   const eventResponse = await octokit.activity.listRepoEvents({
     owner: repo.owner.login,
     repo: repo.name,
@@ -20,7 +20,7 @@ const getLatestEvent = async (repo) => {
   return events[0];
 };
 
-const attrAfter = (dateStr, cutoff) => {
+export const attrAfter = (dateStr, cutoff) => {
   const date = parseGitHubTimestamp(dateStr);
   return date.isAfter(cutoff);
 };
@@ -44,7 +44,7 @@ const updatedSince = async (repo, cutoff) => {
   return false;
 };
 
-const hasDeprecationText = (str) =>
+export const hasDeprecationText = (str) =>
   /\b(DEPRECATED|NO(T| LONGER) SUPPORTED)\b/i.test(str);
 
 const shouldBeArchived = async (repo, cutoff) => {
@@ -106,7 +106,7 @@ const processRepos = async (repos, cutoff, apply) => {
   console.log(msg);
 };
 
-const archiveStaleRepos = async (cutoff, opts) => {
+export const archiveStaleRepos = async (cutoff, opts) => {
   if (!opts.apply) {
     process.stdout.write("DRY RUN: ");
   }
@@ -120,11 +120,4 @@ const archiveStaleRepos = async (cutoff, opts) => {
   await processRepos(repos, cutoff, opts.apply);
 
   console.log("Done.");
-};
-
-module.exports = {
-  getLatestEvent,
-  attrAfter,
-  hasDeprecationText,
-  archiveStaleRepos,
 };

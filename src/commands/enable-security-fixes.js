@@ -1,7 +1,7 @@
-const { getRepos, processRepos } = require("../lib/repos");
-const octokit = require("../lib/client");
+import { getRepos, processRepos } from "../lib/repos";
+import octokit from "../lib/client";
 
-const enableSecurityFixesForRepo = (repository) => {
+export const enableSecurityFixesForRepo = (repository) => {
   const repo = repository.name;
   const owner = repository.owner.login;
 
@@ -26,7 +26,7 @@ ${error.documentation_url}
     });
 };
 
-const enableSecurityFixes = async (opts) => {
+export const enableSecurityFixes = async (opts) => {
   if (!opts.apply) {
     process.stdout.write("DRY RUN: ");
   }
@@ -45,9 +45,4 @@ const enableSecurityFixes = async (opts) => {
     console.error(err.message);
     process.exit(1);
   }
-};
-
-module.exports = {
-  enableSecurityFixesForRepo,
-  enableSecurityFixes,
 };

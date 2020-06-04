@@ -1,13 +1,8 @@
-#!/usr/bin/env node
-
-const moment = require("moment");
-const { archiveStaleRepos } = require("./src/commands/archive");
-const {
-  enableSecurityAlerts
-} = require("./src/commands/enable-security-alerts");
-const {
-  enableSecurityFixes
-} = require("./src/commands/enable-security-fixes");
+import moment from 'moment';
+import yargs from 'yargs';
+import { archiveStaleRepos } from './src/commands/archive';
+import { enableSecurityAlerts } from './src/commands/enable-security-alerts';
+import { enableSecurityFixes } from './src/commands/enable-security-fixes';
 
 const commonOpts = argv => {
   return {
@@ -16,7 +11,7 @@ const commonOpts = argv => {
   };
 };
 
-require("yargs")
+yargs
   .scriptName("ghad")
   .usage("$0 <cmd> [options]")
   .options({

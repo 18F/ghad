@@ -1,5 +1,5 @@
-const nock = require("nock");
-const { enableSecurityFixesForRepo } = require("./enable-security-fixes");
+import nock from 'nock';
+import { enableSecurityFixesForRepo } from './enable-security-fixes';
 
 nock.disableNetConnect();
 

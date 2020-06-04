@@ -1,4 +1,4 @@
-const { Octokit } = require("@octokit/rest");
+import { Octokit } from "@octokit/rest";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 if (!GITHUB_TOKEN) {
@@ -9,8 +9,10 @@ if (!GITHUB_TOKEN) {
   }
 }
 
-module.exports = new Octokit({
+const client = new Octokit({
   auth: GITHUB_TOKEN,
   // https://developer.github.com/v3/previews/
   previews: ["dorian-preview", "london-preview"],
 });
+
+export default client;

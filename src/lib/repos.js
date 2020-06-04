@@ -1,5 +1,5 @@
-const octokit = require("./client");
-const delay = require("./delay");
+import octokit from "./client";
+import delay from "./delay";
 
 const getOrgRepos = (org) => {
   const options = octokit.search.repos.endpoint.merge({
@@ -26,7 +26,7 @@ async function* reposFromResponses(responses) {
 }
 
 // org is optional
-const getRepos = (org) => {
+export const getRepos = (org) => {
   let responses;
   if (org) {
     responses = getOrgRepos(org);
@@ -36,7 +36,7 @@ const getRepos = (org) => {
   return reposFromResponses(responses);
 };
 
-const processRepos = async (repositories, fn, apply) => {
+export const processRepos = async (repositories, fn, apply) => {
   const results = [];
 
   for await (const repository of repositories) {
@@ -60,5 +60,3 @@ const processRepos = async (repositories, fn, apply) => {
 
   return results;
 };
-
-module.exports = { getRepos, processRepos };

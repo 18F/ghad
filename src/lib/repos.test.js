@@ -1,4 +1,4 @@
-const { processRepos } = require("./repos");
+import { processRepos } from './repos';
 
 const repo = {
   name: "test-repo",

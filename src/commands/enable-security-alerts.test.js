@@ -1,5 +1,5 @@
-const nock = require("nock");
-const { enableSecurityAlertsForRepo } = require("./enable-security-alerts");
+import nock from 'nock';
+import { enableSecurityAlertsForRepo } from './enable-security-alerts';
 
 nock.disableNetConnect();
 

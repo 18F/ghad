@@ -23,6 +23,7 @@
   "engines": {
     "node": ">=0.10.0"
   },
+  "type": "module",
   "bin": {
     "ghad": "./cli.js"
   },
@@ -30,6 +31,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.10.2",
     "@octokit/rest": "^17.9.2",
     "moment": "^2.26.0",
     "yargs": "^15.3.1"
@@ -37,5 +39,17 @@
   "devDependencies": {
     "jest": "^26.0.1",
     "nock": "^12.0.3"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
   }
 }
