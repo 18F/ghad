@@ -1,5 +1,5 @@
-import nock from 'nock';
-import { enableSecurityAlertsForRepo } from './enable-security-alerts';
+import nock from "nock";
+import { enableSecurityAlertsForRepo } from "./enable-security-alerts";
 
 nock.disableNetConnect();
 

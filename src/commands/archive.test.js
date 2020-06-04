@@ -1,7 +1,7 @@
-import moment from 'moment';
-import nock from 'nock';
-import octokit from '../lib/client';
-import { getLatestEvent, attrAfter, hasDeprecationText } from './archive';
+import moment from "moment";
+import nock from "nock";
+import octokit from "../lib/client";
+import { getLatestEvent, attrAfter, hasDeprecationText } from "./archive";
 
 nock.disableNetConnect();
 jest.mock("../lib/client");
@@ -9,12 +9,12 @@ jest.mock("../lib/client");
 describe("getLatestEvent()", () => {
   test("filters external events", async () => {
     octokit.activity.listRepoEvents.mockResolvedValue({
-      data: [{ type: "ForkEvent" }, { type: "OtherEvent" }]
+      data: [{ type: "ForkEvent" }, { type: "OtherEvent" }],
     });
 
     const repo = {
       name: "test-repo",
-      owner: { login: "test-org" }
+      owner: { login: "test-org" },
     };
     const event = await getLatestEvent(repo);
     expect(event.type).toBe("OtherEvent");
@@ -26,13 +26,13 @@ describe("attrAfter()", () => {
     [
       "2011-01-26T19:14:43Z",
       moment.utc({ y: 2011, m: 1, d: 26, h: 19, m: 14, s: 44 }),
-      false
+      false,
     ],
     [
       "2011-01-26T19:14:43Z",
       moment.utc({ y: 2011, m: 1, d: 26, h: 19, m: 14, s: 42 }),
-      true
-    ]
+      true,
+    ],
   ])("properly compares '%s' to '%s'", (input, cutoff, expected) => {
     const result = attrAfter(input, cutoff);
     expect(result).toBe(expected);
@@ -44,7 +44,7 @@ describe("hasDeprecationText()", () => {
     ["DEPRECATED for reasons unknown", true],
     ["not supported", true],
     ["No Longer Supported", true],
-    ["other description", false]
+    ["other description", false],
   ])(
     "repositories with a description of '%s'",
     (description, shouldArchive) => {

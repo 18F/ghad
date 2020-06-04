@@ -1,4 +1,4 @@
-import { processRepos } from './repos';
+import { processRepos } from "./repos";
 
 const repo = {
   name: "test-repo",
