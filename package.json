@@ -30,7 +30,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@octokit/rest": "^17.9.2",
+    "@octokit/rest": "^17.9.3",
     "moment": "^2.26.0",
     "yargs": "^15.3.1"
   },
