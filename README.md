@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/18F/ghad.svg?style=svg)](https://circleci.com/gh/18F/ghad)
 
-`ghad` is a command-line tool for managing a large number of GitHub repositories. It currently allows you to:
+`ghad` ("gad") is a command-line tool for managing a large number of GitHub repositories. It currently allows you to:
 
 - Archive repositories that haven't been updated in a specified number of days
 - Enable [security alerts for vulnerable dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)
