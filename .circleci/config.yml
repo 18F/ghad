@@ -45,12 +45,12 @@ workflows:
           filters:
             branches:
               ignore:
-                - master
+                - main
       - build:
           filters:
             branches:
               only:
-                - master
+                - main
           apply: true
   nightly:
     triggers:
@@ -59,7 +59,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
     jobs:
       - build:
           apply: true
