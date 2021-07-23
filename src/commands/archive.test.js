@@ -1,7 +1,7 @@
 const moment = require("moment");
 const nock = require("nock");
 const octokit = require("../lib/client");
-const { getLatestEvent, attrAfter, hasDeprecationText } = require("./archive");
+const { getLatestEvent, attrAfter, hasDeprecationText, hasMaintainedTopic } = require("./archive");
 
 nock.disableNetConnect();
 jest.mock("../lib/client");
@@ -53,3 +53,21 @@ describe("hasDeprecationText()", () => {
     }
   );
 });
+
+describe("hasMaintainedTopic()", () => {
+  test.each([
+    [["maintained"], true],
+    [["MainTAIned"], true],
+    [["one", "two", "maintained"], true],
+    [["not","this","one"], false]
+  ])("repositories with labels '%s'", async (topics, shouldArchive) => {
+    octokit.repos.getAllTopics.mockResolvedValue({ data: { names: topics }})
+    const result = await hasMaintainedTopic({
+      name: "test-repo",
+      owner: {
+        login: "test-org"
+      }
+    });
+    expect(result).toBe(shouldArchive);
+  })
+})

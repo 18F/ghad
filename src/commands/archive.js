@@ -20,6 +20,11 @@ const getLatestEvent = async (repo) => {
   return events[0];
 };
 
+const hasMaintainedTopic = async ({ name: repo, owner: { login: owner }}) => {
+  const { data: { names }} = await octokit.repos.getAllTopics({ owner, repo });
+  return names.map(n => n.toLowerCase()).includes("maintained");
+}
+
 const attrAfter = (dateStr, cutoff) => {
   const date = parseGitHubTimestamp(dateStr);
   return date.isAfter(cutoff);
@@ -52,6 +57,12 @@ const shouldBeArchived = async (repo, cutoff) => {
   const description = repo.description || "";
   if (hasDeprecationText(description)) {
     return true;
+  }
+
+  // If the repo has a "MAINTAINED" topic, skip it.
+  const maintained = await hasMaintainedTopic(repo);
+  if(maintained) {
+    return false;
   }
 
   // if anything has happened with the repository since the cutoff, skip it
@@ -126,5 +137,6 @@ module.exports = {
   getLatestEvent,
   attrAfter,
   hasDeprecationText,
+  hasMaintainedTopic,
   archiveStaleRepos,
 };
