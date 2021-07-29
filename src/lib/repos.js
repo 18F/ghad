@@ -9,7 +9,7 @@ const getOrgRepos = (org) => {
 };
 
 const getUserRepos = () => {
-  const options = octokit.repos.list.endpoint.DEFAULTS;
+  const options = octokit.repos.listForAuthenticatedUser.endpoint.DEFAULTS;
   return octokit.paginate.iterator(options);
 };
 

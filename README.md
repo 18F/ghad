@@ -4,7 +4,7 @@
 
 `ghad` ("gad") is a command-line tool for managing a large number of GitHub repositories. It currently allows you to:
 
-- Archive repositories that haven't been updated in a specified number of days
+- Archive repositories that haven't been updated in a specified number of days unless they have the [`MAINTAINED` topic](https://docs.github.com/en/github/administering-a-repository/managing-repository-settings/classifying-your-repository-with-topics)
 - Enable [security alerts for vulnerable dependencies](https://help.github.com/en/articles/about-security-alerts-for-vulnerable-dependencies)
 - Enable [automated security fixes](https://help.github.com/en/articles/configuring-automated-security-fixes)
 
