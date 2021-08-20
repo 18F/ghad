@@ -66,7 +66,7 @@ const shouldBeArchived = async (repo, cutoff) => {
   }
   
   // Don't archive cloud.gov repos, these are maintained
-  if(repo.org === "cloud-gov"){
+  if(repo.owner.login === 'cloud-gov'){
     return false;
   }
 
