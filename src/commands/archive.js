@@ -64,6 +64,11 @@ const shouldBeArchived = async (repo, cutoff) => {
   if(maintained) {
     return false;
   }
+  
+  // Don't archive cloud.gov repos, these are maintained
+  if(repo.owner.login === 'cloud-gov'){
+    return false;
+  }
 
   // if anything has happened with the repository since the cutoff, skip it
   const recentlyUpdated = await updatedSince(repo, cutoff);
