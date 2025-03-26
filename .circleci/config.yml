@@ -52,14 +52,3 @@ workflows:
               only:
                 - main
           apply: true
-  nightly:
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - build:
-          apply: true
